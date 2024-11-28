@@ -3,34 +3,28 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Role } from '../../enums/role.enum';
 
 
 @Entity({
-  name: 'users',
+  name: 'productsSections',
 })
-export class UserEntity {
+export class ProductsSectionsEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    length: 63,
-  })
-  name: string;
+  @Column()
+  title: string;
 
-  @Column({
-    length: 127,
-    unique: true,
-  })
-  email: string;
+  @Column()
+  description?: string;
 
-  @Column({
-    length: 127,
-  })
-  password: string;
+  @Column()
+  sectionInfo: string;
 
   @CreateDateColumn({ nullable: true })
   createdAt?: Date;
@@ -41,8 +35,4 @@ export class UserEntity {
   @DeleteDateColumn({ nullable: true, default: null })
   deletedAt?: Date
 
-  @Column({
-    default: Role.Admin,
-  })
-  role: number;
 }

@@ -1,4 +1,4 @@
-import {IsEmail, IsInt, IsISO8601, IsString, Matches, MinLength } from 'class-validator'
+import {IsEmail, IsInt, IsString, Matches, MinLength } from 'class-validator'
 
 export class CreateUserDTO {
 

@@ -9,8 +9,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './users/entity/user.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { BlogEntity } from './blog/entity/blog.entity';
-import { BlogModule } from './blog/blog.module';
+import { ProductsSectionsModule } from './productsSections/productsSections.module';
 
 @Module({
   imports: [
@@ -27,7 +26,7 @@ import { BlogModule } from './blog/blog.module';
     }),
     forwardRef(() => UsersModule),
     forwardRef(() => AuthModule),
-    BlogModule,
+    ProductsSectionsModule,
     MailerModule.forRoot({
       transport: {
           host: process.env.MAIL_HOST,
@@ -48,7 +47,7 @@ import { BlogModule } from './blog/blog.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, BlogEntity],
+      entities: [UserEntity],
       synchronize: process.env.ENV === 'development',
     }),
   ],
