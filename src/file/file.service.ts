@@ -17,7 +17,7 @@ export class FileService {
   }
 
   async uploadToS3(file: Express.Multer.File, filename: string) {
-    const folderPath = 'blog/'
+    const folderPath = 'produtos/'
     const filePath = folderPath + filename
 
     const params = {
@@ -35,8 +35,6 @@ export class FileService {
       console.error('Erro ao fazer o upload do arquivo:', error);
       throw new Error('Falha ao subir o arquivo no s3');
     }
-
-
   }
 
 

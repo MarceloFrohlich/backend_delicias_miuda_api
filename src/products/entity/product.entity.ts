@@ -1,4 +1,3 @@
-import { IsNumber } from 'class-validator';
 import {
     Column,
     CreateDateColumn,
@@ -9,20 +8,28 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
+import { ProductsSectionsEntity } from './productsSections.entity';
 
 
 @Entity({
-    name: 'productsSections',
+    name: 'products',
 })
-export class SectionsOptions {
+export class ProductEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column()
-    description: string;
+    name: string
 
-    @IsNumber({ maxDecimalPlaces: 2 })
-    price?: number;
+    @Column()
+    description?: string
+
+    @Column( {type: 'varchar', length: 2048, nullable: true })
+    image?: string
+
+    @OneToMany(() => ProductsSectionsEntity, (section) => section.product)
+    @JoinColumn()
+    sections: ProductsSectionsEntity[]
 
     @CreateDateColumn({ nullable: true })
     createdAt?: Date;

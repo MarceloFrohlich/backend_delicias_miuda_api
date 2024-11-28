@@ -4,14 +4,17 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { SectionsOptionsEntity } from './sectionsOptions.entity';
+import { ProductEntity } from './product.entity';
 
 
 @Entity({
-  name: 'productsSections',
+  name: 'products_sections',
 })
 export class ProductsSectionsEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -21,10 +24,18 @@ export class ProductsSectionsEntity {
   title: string;
 
   @Column()
-  description?: string;
+  description: string;
 
   @Column()
   sectionInfo: string;
+
+  @OneToMany(() => SectionsOptionsEntity, (option) => option.section)
+  @JoinColumn()
+  options: SectionsOptionsEntity[]
+
+  @ManyToOne(() => ProductEntity, (product) => product.sections)
+  @JoinColumn()
+  product: ProductEntity
 
   @CreateDateColumn({ nullable: true })
   createdAt?: Date;

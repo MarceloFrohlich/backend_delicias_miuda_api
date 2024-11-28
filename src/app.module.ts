@@ -9,7 +9,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './users/entity/user.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { ProductsSectionsModule } from './productsSections/productsSections.module';
+import { ProductsModule } from './products/products.module';
+import { ProductsSectionsEntity } from './products/entity/productsSections.entity';
+import { SectionsOptionsEntity } from './products/entity/sectionsOptions.entity';
+import { ProductEntity } from './products/entity/product.entity';
 
 @Module({
   imports: [
@@ -26,7 +29,7 @@ import { ProductsSectionsModule } from './productsSections/productsSections.modu
     }),
     forwardRef(() => UsersModule),
     forwardRef(() => AuthModule),
-    ProductsSectionsModule,
+    ProductsModule,
     MailerModule.forRoot({
       transport: {
           host: process.env.MAIL_HOST,
@@ -47,7 +50,7 @@ import { ProductsSectionsModule } from './productsSections/productsSections.modu
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity],
+      entities: [UserEntity, ProductsSectionsEntity, SectionsOptionsEntity, ProductEntity],
       synchronize: process.env.ENV === 'development',
     }),
   ],
