@@ -44,9 +44,13 @@ import { ProductEntity } from './products/entity/product.entity';
       }
     }),
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
+      // url: process.env.DB_URL,
+      ssl: {
+        rejectUnauthorized: false,  // Isso é necessário em alguns casos, mas use com cautela
+      },
       host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
+      port: 5432,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
