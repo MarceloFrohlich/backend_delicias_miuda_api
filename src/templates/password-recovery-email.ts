@@ -1,5 +1,5 @@
-export const generateEmailHtml = (username: string, token: string) =>  
-`<!DOCTYPE html>
+export const generateEmailHtml = (username: string, token: string) =>
+  `<!DOCTYPE html>
 <html>
 
 <head>
@@ -54,4 +54,4 @@ export const generateEmailHtml = (username: string, token: string) =>
     </table>
 </body>
 
-</html>`
+</html>`;

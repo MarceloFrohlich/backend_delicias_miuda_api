@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { Role } from '../../enums/role.enum';
 
-
 @Entity({
   name: 'users',
 })
@@ -39,7 +38,7 @@ export class UserEntity {
   updatedAt?: Date;
 
   @DeleteDateColumn({ nullable: true, default: null })
-  deletedAt?: Date
+  deletedAt?: Date;
 
   @Column({
     default: Role.Admin,

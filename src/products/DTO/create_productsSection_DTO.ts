@@ -1,14 +1,12 @@
-import {IsString } from 'class-validator'
+import { IsString } from 'class-validator';
 
 export class CreateProductSectionsDTO {
+  @IsString()
+  title: string;
 
-    @IsString()
-    title: string
+  @IsString()
+  description?: string;
 
-    @IsString()
-    description?: string
-  
-    @IsString()
-    sectionInfo: string
-
+  @IsString()
+  sectionInfo: string;
 }

@@ -17,7 +17,7 @@ import { ProductEntity } from './products/entity/product.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ".env",
+      envFilePath: '.env',
     }),
     ThrottlerModule.forRoot({
       throttlers: [
@@ -32,29 +32,34 @@ import { ProductEntity } from './products/entity/product.entity';
     ProductsModule,
     MailerModule.forRoot({
       transport: {
-          host: process.env.MAIL_HOST,
-          port: Number(process.env.MAIL_PORT),
-          auth: {
-            user: process.env.MAIL_USERNAME,
-            pass: process.env.MAIL_PASSWORD,
+        host: process.env.MAIL_HOST,
+        port: Number(process.env.MAIL_PORT),
+        auth: {
+          user: process.env.MAIL_USERNAME,
+          pass: process.env.MAIL_PASSWORD,
         },
       },
       defaults: {
         from: process.env.MAIL_FROM_ADDRESS,
-      }
+      },
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       // url: process.env.DB_URL,
       ssl: {
-        rejectUnauthorized: false,  // Isso é necessário em alguns casos, mas use com cautela
+        rejectUnauthorized: false, // Isso é necessário em alguns casos, mas use com cautela
       },
       host: process.env.DB_HOST,
       port: 5432,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      entities: [UserEntity, ProductsSectionsEntity, SectionsOptionsEntity, ProductEntity],
+      entities: [
+        UserEntity,
+        ProductsSectionsEntity,
+        SectionsOptionsEntity,
+        ProductEntity,
+      ],
       synchronize: process.env.ENV === 'development',
     }),
   ],
@@ -67,4 +72,4 @@ import { ProductEntity } from './products/entity/product.entity';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

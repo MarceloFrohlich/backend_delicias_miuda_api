@@ -3,7 +3,6 @@ import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { AuthenticatedRequest } from './authenticated_request.interface';
 
-
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -18,7 +17,7 @@ export class AuthGuard implements CanActivate {
     if (!authorization || !authorization.startsWith('Bearer ')) {
       return false;
     }
-  
+
     try {
       const token = authorization.split(' ')[1];
       const data = this.authService.checkToken(token); // Valida e decodifica o token

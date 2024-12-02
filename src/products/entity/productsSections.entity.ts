@@ -12,7 +12,6 @@ import {
 import { SectionsOptionsEntity } from './sectionsOptions.entity';
 import { ProductEntity } from './product.entity';
 
-
 @Entity({
   name: 'products_sections',
 })
@@ -31,11 +30,11 @@ export class ProductsSectionsEntity {
 
   @OneToMany(() => SectionsOptionsEntity, (option) => option.section)
   @JoinColumn()
-  options: SectionsOptionsEntity[]
+  options: SectionsOptionsEntity[];
 
   @ManyToOne(() => ProductEntity, (product) => product.sections)
   @JoinColumn()
-  product: ProductEntity
+  product: ProductEntity;
 
   @CreateDateColumn({ nullable: true })
   createdAt?: Date;
@@ -44,6 +43,5 @@ export class ProductsSectionsEntity {
   updatedAt?: Date;
 
   @DeleteDateColumn({ nullable: true, default: null })
-  deletedAt?: Date
-
+  deletedAt?: Date;
 }

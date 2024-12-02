@@ -1,12 +1,8 @@
-import {
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductSectionsDTO } from './DTO/create_productsSection_DTO';
 import { ProductsSectionsEntity } from './entity/productsSections.entity';
-import { UpdatePatchProductsSectionsDTO } from './DTO/update-patch-productsSections-dto';
 import { createOptionDTO } from './DTO/create-option-DTO';
 import { CreateProductDTO } from './DTO/create_products_DTO';
 import { FileService } from '../file/file.service';
@@ -14,7 +10,6 @@ import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/entity/user.entity';
 import { ProductEntity } from './entity/product.entity';
 import { SectionsOptionsEntity } from './entity/sectionsOptions.entity';
-
 
 @Injectable()
 export class ProductsService {
@@ -26,32 +21,36 @@ export class ProductsService {
     private productService: Repository<ProductEntity>,
     @InjectRepository(SectionsOptionsEntity)
     private sectionOptionService: Repository<SectionsOptionsEntity>,
-    private readonly userService: UsersService
-  ) { }
+    private readonly userService: UsersService,
+  ) {}
 
-  async createProduct(data: CreateProductDTO, userJWT: UserEntity, image?: Express.Multer.File) {
-    let imageUrl: string | null = null
-    const dataAtual = new Date()
-    const anoAtual = dataAtual.getFullYear()
-    const mesAtual = dataAtual.getMonth() + 1
-    const diaAtual = dataAtual.getDay()
+  async createProduct(
+    data: CreateProductDTO,
+    userJWT: UserEntity,
+    image?: Express.Multer.File,
+  ) {
+    let imageUrl: string | null = null;
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth() + 1;
+    const diaAtual = dataAtual.getDay();
 
-    const user = await this.userService.getById(userJWT.id)
+    const user = await this.userService.getById(userJWT.id);
 
     if (!user) {
-      throw new ForbiddenException('Usuário não localizado!')
+      throw new ForbiddenException('Usuário não localizado!');
     }
 
     if (image) {
-      const filename = `${anoAtual}-${mesAtual}-${diaAtual}_${(data.name).replace(/\s+/g, "")}`
-      imageUrl = await this.fileService.uploadToS3(image, filename)
+      const filename = `${anoAtual}-${mesAtual}-${diaAtual}_${data.name.replace(/\s+/g, '')}`;
+      imageUrl = await this.fileService.uploadToS3(image, filename);
     }
 
     const productData = {
       ...data,
       image: imageUrl,
-      user: user
-    }
+      user: user,
+    };
 
     const productsSection = this.productService.create(productData);
 
@@ -59,27 +58,27 @@ export class ProductsService {
   }
 
   async createSection(id: string, data: CreateProductSectionsDTO) {
-    const product = await this.getProductById(id)
+    const product = await this.getProductById(id);
 
     const sectionData = {
       ...data,
-      product: product
-    }
+      product: product,
+    };
 
     const productsSection = this.productsSectionsService.create(sectionData);
     return this.productsSectionsService.save(productsSection);
   }
 
   async createOption(id: string, data: createOptionDTO) {
-    const section = await this.getSectionById(id)
+    const section = await this.getSectionById(id);
 
     const optionData = {
       ...data,
-      section: section
-    }
+      section: section,
+    };
 
-    const sectionOption = this.sectionOptionService.create(optionData)
-    return this.sectionOptionService.save(sectionOption)
+    const sectionOption = this.sectionOptionService.create(optionData);
+    return this.sectionOptionService.save(sectionOption);
   }
 
   async getAllProducts() {
@@ -98,27 +97,27 @@ export class ProductsService {
   }
 
   async getProductById(id: string) {
-    await this.existsProduct(id)
+    await this.existsProduct(id);
     return this.productService.findOne({
-      where: {id},
-      relations: ['sections', 'sections.options']
-    })
+      where: { id },
+      relations: ['sections', 'sections.options'],
+    });
   }
 
   async getSectionById(id: string) {
-    await this.existsSection(id)
-    return this.productsSectionsService.findOneBy({ id })
+    await this.existsSection(id);
+    return this.productsSectionsService.findOneBy({ id });
   }
 
   async getOptionsBySectionId(id: string) {
-    const sectionFound = await this.getSectionById(id)
+    const sectionFound = await this.getSectionById(id);
 
     const options = await this.sectionOptionService.find({
       where: { section: { id: sectionFound.id } },
-      relations: ['section']
+      relations: ['section'],
     });
 
-    return options
+    return options;
   }
 
   // async updatePartial(
@@ -160,21 +159,21 @@ export class ProductsService {
   // }
 
   async updateProductImage(id: string, image: Express.Multer.File) {
-    await this.existsProduct(id)
-    const productData = await this.productService.findOneBy({ id })
+    await this.existsProduct(id);
+    const productData = await this.productService.findOneBy({ id });
 
-    let imageUrl: string | null = null
-    const dataAtual = new Date()
-    const anoAtual = dataAtual.getFullYear()
-    const mesAtual = dataAtual.getMonth() + 1
-    const diaAtual = dataAtual.getDay()
+    let imageUrl: string | null = null;
+    const dataAtual = new Date();
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth() + 1;
+    const diaAtual = dataAtual.getDay();
 
-    const filename = `${anoAtual}-${mesAtual}-${diaAtual}_${(productData.image).replaceAll(" ", "+")}`
-    imageUrl = await this.fileService.uploadToS3(image, filename)
+    const filename = `${anoAtual}-${mesAtual}-${diaAtual}_${productData.image.replaceAll(' ', '+')}`;
+    imageUrl = await this.fileService.uploadToS3(image, filename);
 
-    await this.productService.update(id, { image: imageUrl })
+    await this.productService.update(id, { image: imageUrl });
 
-    return { message: 'Banner atualizado com sucesso' }
+    return { message: 'Banner atualizado com sucesso' };
   }
 
   async existsProduct(id: string) {
@@ -186,7 +185,6 @@ export class ProductsService {
     });
 
     if (!product) throw new Error('Produto não encontrado!');
-
   }
   async existsSection(id: string) {
     const productsSection = await this.productsSectionsService.findOne({
@@ -197,6 +195,5 @@ export class ProductsService {
     });
 
     if (!productsSection) throw new Error('Seção não encontrada!');
-
   }
 }

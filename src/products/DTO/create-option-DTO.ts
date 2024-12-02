@@ -1,12 +1,9 @@
-import { Transform } from 'class-transformer';
-import {IsNumber, IsString } from 'class-validator'
+import { IsString } from 'class-validator';
 
 export class createOptionDTO {
+  @IsString()
+  description: string;
 
-    @IsString()
-    description: string
-  
-    @IsString()
-    price: string;
-
+  @IsString()
+  price: string;
 }

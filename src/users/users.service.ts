@@ -1,7 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entity/user.entity';
@@ -15,10 +12,9 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-  ) { }
+  ) {}
 
   async create(data: CreateUserDTO) {
-
     if (
       await this.usersRepository.exists({
         where: {
@@ -45,10 +41,7 @@ export class UsersService {
     return this.usersRepository.findOneBy({ id });
   }
 
-  async update(
-    id: string,
-    { email, name, password, role }: UpdatePutUserDTO,
-  ) {
+  async update(id: string, { email, name, password, role }: UpdatePutUserDTO) {
     await this.exists(id);
 
     const salt = await bcrypt.genSalt();
@@ -101,11 +94,11 @@ export class UsersService {
     await this.exists(id);
 
     await this.usersRepository.update(id, {
-      deletedAt: new Date()
+      deletedAt: new Date(),
     });
 
     return {
-      message: 'Usuário deletado com sucesso!'
+      message: 'Usuário deletado com sucesso!',
     };
   }
 
@@ -118,6 +111,5 @@ export class UsersService {
     });
 
     if (!user) throw new Error('Usuário não encontrado!');
-
   }
 }
