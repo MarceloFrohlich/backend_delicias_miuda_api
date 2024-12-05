@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductSectionsDTO } from './DTO/create_productsSection_DTO';
@@ -22,7 +22,7 @@ export class ProductsService {
     @InjectRepository(SectionsOptionsEntity)
     private sectionOptionService: Repository<SectionsOptionsEntity>,
     private readonly userService: UsersService,
-  ) {}
+  ) { }
 
   async createProduct(
     data: CreateProductDTO,
@@ -70,6 +70,8 @@ export class ProductsService {
   }
 
   async createOption(id: string, data: createOptionDTO) {
+    await this.existsSection(id)
+    
     const section = await this.getSectionById(id);
 
     const optionData = {
@@ -82,7 +84,9 @@ export class ProductsService {
   }
 
   async getAllProducts() {
-    return this.productService.find();
+    return this.productService.find({
+      relations: ['sections', 'sections.options'],
+    });
   }
 
   async getSectionsByProductId(id: string) {
@@ -176,6 +180,42 @@ export class ProductsService {
     return { message: 'Banner atualizado com sucesso' };
   }
 
+  async deleteProduct(id: string) {
+    await this.existsProduct(id)
+
+    await this.productService.update(id, {
+      deletedAt: new Date(),
+    });
+
+    return {
+      message: 'Produto deletado com sucesso!',
+    };
+  }
+
+  async deleteSection(id: string) {
+    await this.existsSection(id)
+
+    await this.productsSectionsService.update(id, {
+      deletedAt: new Date(),
+    });
+
+    return {
+      message: 'Seção deletada com sucesso!',
+    };
+  }
+
+  async deleteOption(id: string) {
+    await this.existsOption(id)
+
+    await this.sectionOptionService.update(id, {
+      deletedAt: new Date(),
+    });
+
+    return {
+      message: 'Opção deletada com sucesso!',
+    };
+  }
+
   async existsProduct(id: string) {
     const product = await this.productService.findOne({
       where: {
@@ -184,8 +224,9 @@ export class ProductsService {
       },
     });
 
-    if (!product) throw new Error('Produto não encontrado!');
+    if (!product) throw new BadRequestException('Produto não encontrado!');
   }
+
   async existsSection(id: string) {
     const productsSection = await this.productsSectionsService.findOne({
       where: {
@@ -194,6 +235,18 @@ export class ProductsService {
       },
     });
 
-    if (!productsSection) throw new Error('Seção não encontrada!');
+    if (!productsSection) throw new BadRequestException('Seção não encontrada!');
   }
+
+  async existsOption(id: string) {
+    const productsOption = await this.sectionOptionService.findOne({
+      where: {
+        id,
+        deletedAt: null,
+      },
+    });
+
+    if (!productsOption) throw new BadRequestException('Opção não encontrada!');
+  }
+
 }

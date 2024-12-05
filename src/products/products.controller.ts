@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Patch,
   Post,
   Req,
   UploadedFile,
@@ -78,20 +79,25 @@ export class ProductsController {
     return this.productsServices.getOptionsBySectionId(id);
   }
 
-  // @Get('/get-by-id/:id')
-  // async getById(@ParamId() id: string) {
-  //   return this.productsServices.getById(id);
-  // }
-
   // @Patch('/update-partial/:id')
   // async updatePartial(@Body() data: UpdatePatchProductsSectionsDTO, @ParamId() id: string) {
   //   return this.productsServices.updatePartial(id, data);
   // }
 
-  // @Patch('/delete/:id')
-  // async delete(@ParamId() id: string) {
-  //   return await this.productsServices.delete(id);
-  // }
+  @Patch('/delete-product/:id')
+  async delete(@ParamId() id: string) {
+    return await this.productsServices.deleteProduct(id);
+  }
+
+  @Patch('/delete-section/:id')
+  async deleteSection(@ParamId() id: string) {
+    return await this.productsServices.deleteSection(id);
+  }
+  
+  @Patch('/delete-option/:id')
+  async deleteOption(@ParamId() id: string) {
+    return await this.productsServices.deleteOption(id);
+  }
 
   @Post('update-image/:id')
   @UseInterceptors(FileInterceptor('image'))
